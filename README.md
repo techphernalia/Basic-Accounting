@@ -20,7 +20,7 @@ Models related with managing of accounts will be grouped and placed inside Ledge
       * *ParentLedgerType* : Ledger Type for current Ledger Head
       * *ParentLedgerHead* : Parent Head of current Ledger Head
       * *AffectsGrossPnL* : Weather accounts in current head affects Gross Profit and Loss, applicable only if CanParticipateInPnL for ParentLedgerType is true
-   * **LedgerAccount**
+    * **LedgerAccount**
       * *LedgerAccountId* : Unique Id of Ledger Account
       * *LedgerAccountName* : Name of Ledger Account
       * *ParentLedgerHead* : Head under which current account lies
