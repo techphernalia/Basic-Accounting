@@ -8,7 +8,7 @@ Rather than keeping all Models in root folder/Namespace, we will categorize them
 Models related with managing of accounts will be grouped and placed inside Ledger folder
 
 * **Model**
-  * **Ledger** : Ledger contains Models required for Accounts Management
+  * **Ledger** : Ledger contains Models required for Accounts Management. Diferent Accounts(LedgerAccount) are grouped under LedgerHead which belongs to another LedgerHead or LedgerType. Each account ultimately comes under one of the LedgerType.
     * **LedgerType**
       * *LedgerTypeId* : Unique Id of Ledger Type
       * *LedgerTypeName* : Name of Ledger Type, e.g. Asset, Liability, Revenue, Expense
