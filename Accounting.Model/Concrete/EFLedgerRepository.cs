@@ -84,7 +84,7 @@ namespace Accounting.Model.Concrete
                 if (dbEntry != null)
                 {
                     dbEntry.LedgerAccountName = ledgerAccount.LedgerAccountName;
-                    dbEntry.ParentLedgerHead = ledgerAccount.ParentLedgerHead;
+                    dbEntry.ParentLedgerHeadId = ledgerAccount.ParentLedgerHeadId;
                     dbEntry.OpeningBalance = ledgerAccount.OpeningBalance;
                     dbEntry.AffectsInventory = ledgerAccount.AffectsInventory;
                 }
@@ -105,8 +105,8 @@ namespace Accounting.Model.Concrete
                 {
                     dbEntry.LedgerHeadName = ledgerHead.LedgerHeadName;
                     dbEntry.LedgerHeadDescription = ledgerHead.LedgerHeadDescription;
-                    dbEntry.ParentLedgerType = ledgerHead.ParentLedgerType;
-                    dbEntry.ParentLedgerHead = ledgerHead.ParentLedgerHead;
+                    dbEntry.ParentLedgerTypeId = ledgerHead.ParentLedgerTypeId;
+                    dbEntry.ParentLedgerHeadId = ledgerHead.ParentLedgerHeadId;
                     dbEntry.AffectsGrossPnL = ledgerHead.AffectsGrossPnL;
                 }
             }

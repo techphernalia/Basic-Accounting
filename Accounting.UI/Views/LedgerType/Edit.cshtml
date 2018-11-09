@@ -1,0 +1,45 @@
+﻿@model LedgerType
+
+@{
+    ViewBag.Title = (Model.LedgerTypeId == 0 ? "Create New" : ("Edit" + @Model.LedgerTypeName));
+}
+
+<div class="panel">
+    <div class="panel-heading">
+        <h3>@(Model.LedgerTypeId == 0 ? "Create New" : ("Edit" + @Model.LedgerTypeName)) </h3>
+    </div>
+    @using (Html.BeginForm("Edit", "LedgerType", FormMethod.Post))
+    {
+        <div class="panel-body">
+            @Html.HiddenFor(m => m.LedgerTypeId)
+            @foreach (var property in ViewData.ModelMetadata.Properties)
+            {
+                switch (property.PropertyName)
+                {
+                    case "LedgerTypeId":
+                        break;
+                    case "LedgerTypeName":
+                        <div class="form-group">
+                            <label>@(property.DisplayName ?? property.PropertyName)</label>
+                            @Html.TextBox(property.PropertyName, null, new { @class = "form-control" })
+                            @Html.ValidationMessage(property.PropertyName)
+                        </div>
+                        break;
+                    case "CanParticipateInPnL":
+                        <div class="checkbox">
+                            <label>
+                                @Html.CheckBox(property.PropertyName, Model.CanParticipateInPnL)
+                                @(property.DisplayName ?? property.PropertyName)
+                            </label>
+                            @Html.ValidationMessage(property.PropertyName)
+                        </div>
+                        break;
+                }
+            }
+        </div>
+        <div class="panel-footer">
+            <input type="submit" value="Save" class="btn btn-sm btn-primary" />
+            @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-sm btn-default" })
+        </div>
+    }
+</div>

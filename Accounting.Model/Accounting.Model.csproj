@@ -78,16 +78,28 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abstract\ILedgerRepository.cs" />
+    <Compile Include="Abstract\ITransactionRepository.cs" />
+    <Compile Include="Concrete\CacheRepository.cs" />
     <Compile Include="Concrete\EFDbContext.cs" />
     <Compile Include="Concrete\EFLedgerRepository.cs" />
+    <Compile Include="Concrete\EFTransactionRepository.cs" />
     <Compile Include="Model\Ledger\LedgerAccount.cs" />
     <Compile Include="Model\Ledger\LedgerHead.cs" />
     <Compile Include="Model\Ledger\LedgerType.cs" />
+    <Compile Include="Model\Transaction\TransactionAccountDetail.cs" />
+    <Compile Include="Model\Transaction\TransactionSide.cs" />
+    <Compile Include="Model\Transaction\TransactionSummary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utility\LedgerHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\Accounting.DB\SQLQuery.sql">
+      <Link>SQLQuery.sql</Link>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

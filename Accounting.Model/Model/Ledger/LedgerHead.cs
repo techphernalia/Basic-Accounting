@@ -18,11 +18,11 @@ namespace Accounting.Model.Model.Ledger
 
         [Required(ErrorMessage = "Please select Ledger Type")]
         [Display(Name = "Ledger Type")]
-        public LedgerType ParentLedgerType { get; set; }
+        public int ParentLedgerTypeId { get; set; }
 
         [Required(ErrorMessage = "Please select Ledger Head")]
         [Display(Name = "Group Under")]
-        public LedgerHead ParentLedgerHead { get; set; }
+        public int ParentLedgerHeadId { get; set; }
 
         [Display(Name = "Affects Gross PnL")]
         public bool AffectsGrossPnL { get; set; }
