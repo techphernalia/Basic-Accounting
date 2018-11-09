@@ -13,14 +13,14 @@ Running this project
 Available URLs:
 
 * List Items
- * /LedgerType
- * /LedgerHead
- * /LedgerAccount
+  * /LedgerType
+  * /LedgerHead
+  * /LedgerAccount
 * Create Items
- * /LedgerType/Create
- * /LedgerHead/Create
- * /LedgerAccount/Create
- * /Transaction/Create
+  * /LedgerType/Create
+  * /LedgerHead/Create
+  * /LedgerAccount/Create
+  * /Transaction/Create
 
 **Please note ReadMe file is old and is not latest (Documentation in Progress)**
 
