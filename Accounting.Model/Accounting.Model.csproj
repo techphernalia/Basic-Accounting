@@ -97,8 +97,23 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\Accounting.DB\001.LedgerType.sql">
+      <Link>DBQueries\001.LedgerType.sql</Link>
+    </Content>
+    <Content Include="..\Accounting.DB\002.LedgerHead.sql">
+      <Link>DBQueries\002.LedgerHead.sql</Link>
+    </Content>
+    <Content Include="..\Accounting.DB\003.LedgerAccount.sql">
+      <Link>DBQueries\003.LedgerAccount.sql</Link>
+    </Content>
+    <Content Include="..\Accounting.DB\004.TransactionSummary.sql">
+      <Link>DBQueries\004.TransactionSummary.sql</Link>
+    </Content>
+    <Content Include="..\Accounting.DB\005.TransactionDetail.sql">
+      <Link>DBQueries\005.TransactionDetail.sql</Link>
+    </Content>
     <Content Include="..\Accounting.DB\SQLQuery.sql">
-      <Link>SQLQuery.sql</Link>
+      <Link>DBQueries\SQLQuery.sql</Link>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

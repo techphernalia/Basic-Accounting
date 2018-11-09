@@ -1,3 +1,29 @@
+Running this project
+
+* Download Repository
+* Open **Accounting.UI.sln** in Visual Studio
+* Build the Project
+* Run **Accounting.UI** project
+* It will create empty database
+* Stop project
+* Open **SQL Server Object Explorer** (from **View** Menu)
+* Feed sample Data from **Accounting.Model->DBQueries->00x.xxx.sql** files
+* Re Run the project
+
+Available URLs:
+
+* List Items
+ * /LedgerType
+ * /LedgerHead
+ * /LedgerAccount
+* Create Items
+ * /LedgerType/Create
+ * /LedgerHead/Create
+ * /LedgerAccount/Create
+ * /Transaction/Create
+
+**Please note ReadMe file is old and is not latest (Documentation in Progress)**
+
 # Basic-Accounting
 
 # Accounting.Models
@@ -26,3 +52,13 @@ Models related with managing of accounts will be grouped and placed inside Ledge
       * *ParentLedgerHead* : Head under which current account lies
       * *OpeningBalance* : Opening Balance of account
       * *AffectsInventory* : Weather this account affects Inventory items
+
+**Nuget Packages** Nuget Packages used in project
+
+* Install-Package EntityFramework -projectname Accounting.Model
+* Install-Package EntityFramework -projectname Accounting.UI
+* Install-Package -version 3.0.0 bootstrap -projectname Accounting.UI
+* Install-Package Ninject -version 3.0.1.10 -projectname Accounting.UI
+* Install-Package Ninject.Web.Common -version 3.0.0.7 -projectname Accounting.UI
+* Install-Package Ninject.MVC3 -Version 3.0.0.6 -projectname Accounting.UI
+* Install-Package Microsoft.Aspnet.Mvc -version 5.0.0 -projectname Accounting.Model
