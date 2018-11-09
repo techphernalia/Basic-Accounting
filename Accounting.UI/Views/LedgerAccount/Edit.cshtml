@@ -1,0 +1,53 @@
+﻿@model LedgerAccount
+
+@{
+    ViewBag.Title = (Model.LedgerAccountId == 0 ? "Create New" : ("Edit" + @Model.LedgerAccountName));
+}
+
+<div class="panel">
+    <div class="panel-heading">
+        <h3>@(Model.LedgerAccountId == 0 ? "Create New" : ("Edit" + @Model.LedgerAccountName)) </h3>
+    </div>
+    @using (Html.BeginForm("Edit", "LedgerAccount", FormMethod.Post))
+    {
+        <div class="panel-body">
+            @Html.HiddenFor(m => m.LedgerAccountId)
+            @foreach (var property in ViewData.ModelMetadata.Properties)
+            {
+                switch (property.PropertyName)
+                {
+                    case "LedgerAccountId":
+                        break;
+                    case "LedgerAccountName":
+                    case "OpeningBalance":
+                        <div class="form-group">
+                            <label>@(property.DisplayName ?? property.PropertyName)</label>
+                            @Html.TextBox(property.PropertyName, null, new { @class = "form-control" })
+                            @Html.ValidationMessage(property.PropertyName)
+                        </div>
+                        break;
+                    case "AffectsInventory":
+                        <div class="checkbox">
+                            <label>
+                                @Html.CheckBox(property.PropertyName, Model.AffectsInventory)
+                                @(property.DisplayName ?? property.PropertyName)
+                            </label>
+                            @Html.ValidationMessage(property.PropertyName)
+                        </div>
+                        break;
+                    case "ParentLedgerHeadId":
+                        <div class="form-group">
+                            <label>@(property.DisplayName ?? property.PropertyName)</label>
+                            @Html.DropDownList(property.PropertyName, ((IEnumerable<LedgerHead>)ViewBag.LedgerHeads).Select(x => new SelectListItem { Text = x.LedgerHeadName, Value = x.LedgerHeadId.ToString() }), null, new { @class = "form-control" })
+                            @Html.ValidationMessage(property.PropertyName)
+                        </div>
+                        break;
+                }
+            }
+            <div class="panel-footer">
+                <input type="submit" value="Save" class="btn btn-sm btn-primary" />
+                @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-sm btn-default" })
+            </div>
+        </div>
+    }
+</div>

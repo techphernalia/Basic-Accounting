@@ -30,6 +30,7 @@ namespace Accounting.UI.Infrastructure
         private void AddBindings()
         {
             kernel.Bind<ILedgerRepository>().To<EFLedgerRepository>();
+            kernel.Bind<ITransactionRepository>().To<EFTransactionRepository>();
         }
     }
 }

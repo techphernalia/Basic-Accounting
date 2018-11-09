@@ -1,0 +1,33 @@
+﻿@model IEnumerable<LedgerAccount>
+
+@{
+    ViewBag.Title = "Ledger Accounts";
+}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3>Ledger Accounts</h3>
+    </div>
+    <div class="panel-body">
+        <table class="table table-striped table-condensed table-bordered">
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.ParentLedgerHeadId)</th>
+                <th>@Html.DisplayNameFor(model => model.LedgerAccountName)</th>
+                <th>@Html.DisplayNameFor(model => model.OpeningBalance)</th>
+                <th class="text-right">@Html.DisplayNameFor(model => model.AffectsInventory)</th>
+            </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.ParentLedgerHead().LedgerHeadName</td>
+                    <td>@item.LedgerAccountName</td>
+                    <td class="text-right">@item.OpeningBalance.ToString("C")</td>
+                    <td class="text-right"><span class="fa fa-toggle@(item.AffectsInventory ? "-on" : "-off")"></span></td>
+                </tr>
+            }
+        </table>
+    </div>
+    <div class="panel-footer text-right">
+        @Html.ActionLink("New Ledger Account", "Create", null, new { @class = "btn btn-sm btn-primary " })
+    </div>
+</div>

@@ -15,7 +15,7 @@ namespace Accounting.Model.Model.Ledger
 
         [Required(ErrorMessage = "Please select Ledger Head")]
         [Display(Name = "Ledger Head")]
-        public LedgerHead ParentLedgerHead { get; set; }
+        public int ParentLedgerHeadId { get; set; }
 
         [Display(Name = "Opening Balance")]
         public double OpeningBalance { get; set; }

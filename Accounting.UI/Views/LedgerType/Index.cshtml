@@ -1,0 +1,29 @@
+﻿@model IEnumerable<LedgerType>
+
+@{
+    ViewBag.Title = "Ledger Types";
+}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3>Ledger Types</h3>
+    </div>
+    <div class="panel-body">
+        <table class="table table-striped table-condensed table-bordered">
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.LedgerTypeName)</th>
+                <th class="text-right">@Html.DisplayNameFor(model => model.CanParticipateInPnL)</th>
+            </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.LedgerTypeName</td>
+                    <td class="text-right"><span class="fa fa-toggle@(item.CanParticipateInPnL ? "-on" : "-off")" ></span></td>
+                </tr>
+            }
+        </table>
+    </div>
+    <div class="panel-footer text-right">
+        @Html.ActionLink("New Ledger Type", "Create", null, new { @class = "btn btn-sm btn-primary " })
+    </div>
+</div>
