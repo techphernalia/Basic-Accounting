@@ -9,7 +9,7 @@
         <h3>Transctions for Account [<b>@LedgerHelper.LedgerAccount(((int)ViewBag.LedgerAccountId)).LedgerAccountName</b>]</h3>
     </div>
     <div class="panel-body">
-        <table class="table table-striped table-condensed table-bordered">
+        <table class="table table-striped table-condensed table-bordered table-hover">
             <tr>
                 <th rowspan="2">@Html.DisplayNameFor(model => model.TransactionDate)</th>
                 <th colspan="3">@Html.DisplayNameFor(model => model.TransactionNarration)</th>
@@ -22,11 +22,11 @@
                 <th class="text-right">Credit</th>
                 <th class="text-right">Debit</th>
             </tr>
-            <tr>
+            <tr class="@(ViewBag.OpeningBalance>=0?"success":"danger")">
                 <td></td>
                 <td colspan="3">Opening Balance</td>
-                <td></td>
-                <td></td>
+                <td class="text-right">@(Model.Count(x => x.CreditAmount > 0))</td>
+                <td class="text-right">@(Model.Count(x => x.DebitAmount > 0))</td>
                 <td class="text-right">@(ViewBag.OpeningBalance < 0 ? ((ViewBag.OpeningBalance * -1).ToString("C") + " Db.") : (ViewBag.OpeningBalance.ToString("C") + " Cr."))</td>
             </tr>
             @foreach (var item in Model)
@@ -47,12 +47,12 @@
                     </tr>
                 }
             }
-            <tr>
+            <tr class="@(ViewBag.ClosingBalance>=0?"success":"danger")">
                 <td></td>
                 <td colspan="3">Closing Balance</td>
-                <td></td>
-                <td></td>
-                <td class="text-right">@(ViewBag.ClosingBalance<0?((ViewBag.ClosingBalance*-1).ToString("C") + " Db."):(ViewBag.ClosingBalance.ToString("C")+" Cr."))</td>
+                <td class="text-right">@(Model.Sum(x=>x.CreditAmount).ToString("C"))</td>
+                <td class="text-right">@(Model.Sum(x => x.DebitAmount).ToString("C"))</td>
+                <td class="text-right">@(ViewBag.ClosingBalance < 0 ? ((ViewBag.ClosingBalance * -1).ToString("C") + " Db.") : (ViewBag.ClosingBalance.ToString("C") + " Cr."))</td>
             </tr>
         </table>
     </div>

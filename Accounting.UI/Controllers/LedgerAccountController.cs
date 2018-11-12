@@ -20,8 +20,8 @@ namespace Accounting.UI.Controllers
 
         public ActionResult Index()
         {
-            ViewBag.LedgerHeads = CacheRepository.LedgerHeads;
-            return View(CacheRepository.LedgerAccounts);
+            ViewBag.LedgerHeads = CacheRepository.LedgerHeads.OrderBy(x=>x.LedgerHeadName).ToList();
+            return View(CacheRepository.LedgerAccounts.OrderBy(x=>x.LedgerAccountName));
         }
         public ViewResult Create()
         {
@@ -50,8 +50,8 @@ namespace Accounting.UI.Controllers
         }
         private void SetMetaDataForForm()
         {
-            ViewBag.LedgerHeads = CacheRepository.LedgerHeads;
-            ViewBag.LedgerTypes = CacheRepository.LedgerTypes;
+            ViewBag.LedgerHeads = CacheRepository.LedgerHeads.OrderBy(x=>x.LedgerHeadName).ToList();
+            ViewBag.LedgerTypes = CacheRepository.LedgerTypes.OrderBy(x=>x.LedgerTypeName).ToList();
         }
     }
 }

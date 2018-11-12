@@ -1,6 +1,7 @@
 ﻿using Accounting.Model.Abstract;
 using Accounting.Model.Concrete;
 using Accounting.Model.Model.Transaction;
+using Accounting.Model.Utility;
 using Accounting.UI.ViewModels;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +30,7 @@ namespace Accounting.UI.Controllers
         [HttpPost]
         public ActionResult Edit(CreateTransactionViewModel transactionDetail)
         {
-            if(Request.Form["Add"] != null)
+            if (Request.Form["Add"] != null)
             {
                 transactionDetail.TransactionAccounts.Add(GetPendingTransactionAccountDetail(transactionDetail));
             }
@@ -37,9 +38,7 @@ namespace Accounting.UI.Controllers
             {
                 var id = transactionRepository.SaveTransactionSummary(new TransactionSummary { TransactionDate = transactionDetail.TransactionDate, TransactionNarration = transactionDetail.TransactionNarration, TransactionSummaryId = transactionDetail.TransactionSummaryId });
                 transactionRepository.SaveTransactionDetail(transactionDetail.TransactionAccounts, id);
-                // ledgerRepository.SaveLedgerAccount(ledgerAccount);
                 TempData["message"] = string.Format("Transaction saved successfully [{0}]", id);
-                // CacheRepository.RefreshLedgerAccounts();
                 return RedirectToAction("Create");
             }
             SetMetaDataForForm();
@@ -51,16 +50,16 @@ namespace Accounting.UI.Controllers
             var transactionSummary = transactionRepository.GetTransactionSummaryForTransactionIds(transactionIds);
             var transactionAccountDetail = transactionRepository.GetTransactionAccountDetailForTransactionIds(transactionIds);
             var displayTransactionDetail = (from summary in transactionSummary.OrderBy(x => x.TransactionDate)
-                        select new DisplayTransactionViewModel
-                        {
-                            TransactionSummaryId = summary.TransactionSummaryId,
-                            TransactionDate = summary.TransactionDate,
-                            TransactionNarration = summary.TransactionNarration,
-                            TransactionAccounts = (from acc in transactionAccountDetail where acc.TransactionSummaryId == summary.TransactionSummaryId  select acc).ToList(),
-                        }).ToList();
-            double openingBal = 0;
+                                            select new DisplayTransactionViewModel
+                                            {
+                                                TransactionSummaryId = summary.TransactionSummaryId,
+                                                TransactionDate = summary.TransactionDate,
+                                                TransactionNarration = summary.TransactionNarration,
+                                                TransactionAccounts = (from acc in transactionAccountDetail where acc.TransactionSummaryId == summary.TransactionSummaryId select acc).ToList(),
+                                            }).ToList();
+            double openingBal = ledgerAccountId.LedgerAccount().OpeningBalance;
             double closingBal = openingBal;
-            foreach(var tran in displayTransactionDetail)
+            foreach (var tran in displayTransactionDetail)
             {
                 var ledgerDetail = (from l in tran.TransactionAccounts where l.LedgerAccountId == ledgerAccountId select l).ToList();
                 double creditAmount = 0;
@@ -68,7 +67,7 @@ namespace Accounting.UI.Controllers
                 foreach (var l in ledgerDetail)
                 {
                     tran.TransactionAccounts.Remove(l);
-                    if(l.TransactionSide == TransactionSide.Credit)
+                    if (l.TransactionSide == TransactionSide.Credit)
                     {
                         creditAmount += l.Amount;
                     }
@@ -90,7 +89,7 @@ namespace Accounting.UI.Controllers
         }
         private void SetMetaDataForForm()
         {
-            ViewBag.LedgerAccounts = CacheRepository.LedgerAccounts;
+            ViewBag.LedgerAccounts = CacheRepository.LedgerAccounts.OrderBy(x=>x.LedgerAccountName).ToList();
         }
         private bool ValidateTransaction(CreateTransactionViewModel transactionDetail)
         {
