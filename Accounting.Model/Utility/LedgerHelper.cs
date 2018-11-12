@@ -22,5 +22,13 @@ namespace Accounting.Model.Utility
         {
             return CacheRepository.LedgerHeads.Where(x => x.LedgerHeadId == ledgerAccount.ParentLedgerHeadId).FirstOrDefault();
         }
+        public static LedgerAccount LedgerAccount(this int ledgerAccountId)
+        {
+            return CacheRepository.LedgerAccounts.Where(x => x.LedgerAccountId == ledgerAccountId).FirstOrDefault();
+        }
+        public static string ToDisplayDate(this string date)
+        {
+            return DateTime.ParseExact(date, "yyyy-MM-dd", null).ToString("MMM dd, yyyy");
+        }
     }
 }

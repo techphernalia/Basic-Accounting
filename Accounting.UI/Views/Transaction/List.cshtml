@@ -1,0 +1,62 @@
+﻿@model IEnumerable<DisplayTransactionViewModel>
+@{
+    ViewBag.Title = "Ledger Accounts";
+}
+
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3>Transctions for Account [<b>@LedgerHelper.LedgerAccount(((int)ViewBag.LedgerAccountId)).LedgerAccountName</b>]</h3>
+    </div>
+    <div class="panel-body">
+        <table class="table table-striped table-condensed table-bordered">
+            <tr>
+                <th rowspan="2">@Html.DisplayNameFor(model => model.TransactionDate)</th>
+                <th colspan="3">@Html.DisplayNameFor(model => model.TransactionNarration)</th>
+                <th rowspan="2" class="text-right">Credit</th>
+                <th rowspan="2" class="text-right">Debit</th>
+                <th rowspan="2" class="text-right">Balance</th>
+            </tr>
+            <tr>
+                <th>Counter Party</th>
+                <th class="text-right">Credit</th>
+                <th class="text-right">Debit</th>
+            </tr>
+            <tr>
+                <td></td>
+                <td colspan="3">Opening Balance</td>
+                <td></td>
+                <td></td>
+                <td class="text-right">@(ViewBag.OpeningBalance < 0 ? ((ViewBag.OpeningBalance * -1).ToString("C") + " Db.") : (ViewBag.OpeningBalance.ToString("C") + " Cr."))</td>
+            </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td rowspan="@(item.TransactionAccounts.Count+1)" class="text-center">@item.TransactionDate.ToDisplayDate()</td>
+                    <td colspan="3">@item.TransactionNarration</td>
+                    <td rowspan="@(item.TransactionAccounts.Count+1)" class="text-right">@(item.CreditAmount > 0 ? item.CreditAmount.ToString("C") : "")</td>
+                    <td rowspan="@(item.TransactionAccounts.Count+1)" class="text-right">@(item.DebitAmount > 0 ? item.DebitAmount.ToString("C") : "")</td>
+                    <td rowspan="@(item.TransactionAccounts.Count+1)" class="text-right">@(item.Balance >= 0 ? (item.Balance.ToString("C") + " Cr.") : ((item.Balance * -1).ToString("C") + " Db."))</td>
+                </tr>
+                foreach (var acc in item.TransactionAccounts)
+                {
+                    <tr>
+                        <td>@Html.ActionLink(acc.LedgerAccountId.LedgerAccount().LedgerAccountName, "List", "Transaction", new { acc.LedgerAccountId.LedgerAccount().LedgerAccountId }, null)</td>
+                        <td class="text-right">@(acc.TransactionSide == TransactionSide.Credit ? acc.Amount.ToString("C") : "")</td>
+                        <td class="text-right">@(acc.TransactionSide == TransactionSide.Debit ? acc.Amount.ToString("C") : "")</td>
+                    </tr>
+                }
+            }
+            <tr>
+                <td></td>
+                <td colspan="3">Closing Balance</td>
+                <td></td>
+                <td></td>
+                <td class="text-right">@(ViewBag.ClosingBalance<0?((ViewBag.ClosingBalance*-1).ToString("C") + " Db."):(ViewBag.ClosingBalance.ToString("C")+" Cr."))</td>
+            </tr>
+        </table>
+    </div>
+    <div class="panel-footer text-right">
+        @Html.ActionLink("Transaction", "Create", "Transaction", null, new { @class = "btn btn-sm btn-primary " })
+    </div>
+</div>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Accounting.Model.Concrete;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -25,6 +26,12 @@ namespace Accounting.UI.Controllers
             ViewBag.Message = "Your contact page.";
 
             return View();
+        }
+
+        public ActionResult RefreshLedgers()
+        {
+            CacheRepository.RefreshLedgers();
+            return Redirect(Request.UrlReferrer.ToString());
         }
     }
 }
