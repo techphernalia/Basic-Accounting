@@ -20,7 +20,7 @@ namespace Accounting.UI.Controllers
 
         public ActionResult Index()
         {
-            return View(CacheRepository.LedgerTypes);
+            return View(CacheRepository.LedgerTypes.OrderBy(x=>x.LedgerTypeName));
         }
 
         public ViewResult Create()
