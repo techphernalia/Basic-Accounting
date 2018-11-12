@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title - Basic Accounting</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 </head>
@@ -16,13 +16,26 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Basic Accounting", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Ledger <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Refresh", "RefreshLedgers", "Home")</li>
+                            <li role="separator" class="divider"></li>
+                            <li>@Html.ActionLink("Ledger Type : View", "Index", "LedgerType")</li>
+                            <li>@Html.ActionLink("Ledger Type : Create New", "Create", "LedgerType")</li>
+                            <li role="separator" class="divider"></li>
+                            <li>@Html.ActionLink("Ledger Head : View", "Index", "LedgerHead")</li>
+                            <li>@Html.ActionLink("Ledger Head : Create New", "Create", "LedgerHead")</li>
+                            <li role="separator" class="divider"></li>
+                            <li>@Html.ActionLink("Ledger Account : View", "Index", "LedgerAccount")</li>
+                            <li>@Html.ActionLink("Ledger Account : Create New", "Create", "LedgerAccount")</li>
+                        </ul>
+                    </li>
+                    <li>@Html.ActionLink("Transaction", "Create", "Transaction")</li>
                 </ul>
             </div>
         </div>

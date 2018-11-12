@@ -45,6 +45,49 @@ namespace Accounting.UI.Controllers
             SetMetaDataForForm();
             return View(transactionDetail);
         }
+        public ViewResult List(int ledgerAccountId)
+        {
+            var transactionIds = transactionRepository.GetTransactionsIdsForLedgerAccount(ledgerAccountId);
+            var transactionSummary = transactionRepository.GetTransactionSummaryForTransactionIds(transactionIds);
+            var transactionAccountDetail = transactionRepository.GetTransactionAccountDetailForTransactionIds(transactionIds);
+            var displayTransactionDetail = (from summary in transactionSummary.OrderBy(x => x.TransactionDate)
+                        select new DisplayTransactionViewModel
+                        {
+                            TransactionSummaryId = summary.TransactionSummaryId,
+                            TransactionDate = summary.TransactionDate,
+                            TransactionNarration = summary.TransactionNarration,
+                            TransactionAccounts = (from acc in transactionAccountDetail where acc.TransactionSummaryId == summary.TransactionSummaryId  select acc).ToList(),
+                        }).ToList();
+            double openingBal = 0;
+            double closingBal = openingBal;
+            foreach(var tran in displayTransactionDetail)
+            {
+                var ledgerDetail = (from l in tran.TransactionAccounts where l.LedgerAccountId == ledgerAccountId select l).ToList();
+                double creditAmount = 0;
+                double debitAmount = 0;
+                foreach (var l in ledgerDetail)
+                {
+                    tran.TransactionAccounts.Remove(l);
+                    if(l.TransactionSide == TransactionSide.Credit)
+                    {
+                        creditAmount += l.Amount;
+                    }
+                    else
+                    {
+                        debitAmount += l.Amount;
+                    }
+                }
+                closingBal += creditAmount - debitAmount;
+
+                tran.CreditAmount = creditAmount;
+                tran.DebitAmount = debitAmount;
+                tran.Balance = closingBal;
+            }
+            ViewBag.LedgerAccountId = ledgerAccountId;
+            ViewBag.OpeningBalance = openingBal;
+            ViewBag.ClosingBalance = closingBal;
+            return View(displayTransactionDetail);
+        }
         private void SetMetaDataForForm()
         {
             ViewBag.LedgerAccounts = CacheRepository.LedgerAccounts;

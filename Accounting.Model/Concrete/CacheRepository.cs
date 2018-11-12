@@ -28,6 +28,13 @@ namespace Accounting.Model.Concrete
             }
         }
 
+        public static void RefreshLedgers()
+        {
+            RefreshLedgerTypes();
+            RefreshLedgerHeads();
+            RefreshLedgerAccounts();
+        }
+
         public static List<LedgerType> LedgerTypes
         {
             get

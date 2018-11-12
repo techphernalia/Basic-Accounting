@@ -12,6 +12,37 @@ namespace Accounting.Model.Concrete
     {
         private EFDbContext context = new EFDbContext();
 
+        public IEnumerable<TransactionSummary> TransactionSummaries
+        {
+            get
+            {
+                return context.TransactionSummaries;
+            }
+        }
+
+        public IEnumerable<TransactionAccountDetail> TransactionAccountDetail
+        {
+            get
+            {
+                return context.TransactionAccountDetails;
+            }
+        }
+
+        public int[] GetTransactionsIdsForLedgerAccount(int ledgerAccountId)
+        {
+            return context.TransactionAccountDetails.Where(x => x.LedgerAccountId == ledgerAccountId).Select(x => x.TransactionSummaryId).ToArray();
+        }
+
+        public List<TransactionSummary> GetTransactionSummaryForTransactionIds(IEnumerable<int> transactionIds)
+        {
+            return context.TransactionSummaries.Where(x => transactionIds.Contains(x.TransactionSummaryId)).ToList();
+        }
+
+        public List<TransactionAccountDetail> GetTransactionAccountDetailForTransactionIds(IEnumerable<int> transactionIds)
+        {
+            return context.TransactionAccountDetails.Where(x => transactionIds.Contains(x.TransactionSummaryId)).ToList();
+        }
+
         public void SaveTransactionDetail(List<TransactionAccountDetail> transactionAccountDetails, int transactionSummaryId)
         {
             var existingDetail = context.TransactionAccountDetails.Where(x => x.TransactionSummaryId == transactionSummaryId);
