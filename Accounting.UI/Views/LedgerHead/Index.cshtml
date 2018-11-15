@@ -18,12 +18,12 @@
             </tr>
             @foreach (var item in Model)
             {
-                <tr>
-                    <td>@item.ParentLedgerType().LedgerTypeName</td>
-                    <td>@(item.ParentLedgerHead() == null?"":item.ParentLedgerHead().LedgerHeadName)</td>
-                    <td title="@item.LedgerHeadDescription">@item.LedgerHeadName</td>
-                    <td class="text-right"><span class="fa fa-toggle@(item.AffectsGrossPnL ? "-on" : "-off")"></span></td>
-                </tr>
+            <tr>
+                <td>@item.ParentLedgerType().LedgerTypeName</td>
+                <td>@(item.ParentLedgerHead() == null ? null : @Html.ActionLink(item.ParentLedgerHead().LedgerHeadName, "ListLedgerHead", "Transaction", new { ledgerHeadId = item.ParentLedgerHeadId }, null))</td>
+                <td title="@item.LedgerHeadDescription">@Html.ActionLink(item.LedgerHeadName, "ListLedgerHead", "Transaction", new { item.LedgerHeadId }, null)</td>
+                <td class="text-right"><span class="fa fa-toggle@(item.AffectsGrossPnL ? "-on" : "-off")"></span></td>
+            </tr>
             }
         </table>
     </div>

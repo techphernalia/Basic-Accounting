@@ -19,8 +19,8 @@
             @foreach (var item in Model)
             {
                 <tr>
-                    <td>@item.ParentLedgerHead().LedgerHeadName</td>
-                    <td> @Html.ActionLink(item.LedgerAccountName, "List","Transaction", new { item.LedgerAccountId }, null)</td>
+                    <td>@Html.ActionLink(item.ParentLedgerHead().LedgerHeadName, "ListLedgerHead", "Transaction", new { ledgerHeadId = item.ParentLedgerHeadId }, null)</td>
+                    <td>@Html.ActionLink(item.LedgerAccountName, "ListLedgerAccount", "Transaction", new { item.LedgerAccountId }, null)</td>
                     <td class="text-right">@item.OpeningBalance.ToString("C")</td>
                     <td class="text-right"><span class="fa fa-toggle@(item.AffectsInventory ? "-on" : "-off")"></span></td>
                 </tr>

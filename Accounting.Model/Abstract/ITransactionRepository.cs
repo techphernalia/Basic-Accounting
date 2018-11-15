@@ -19,6 +19,7 @@ namespace Accounting.Model.Abstract
         int[] GetTransactionsIdsForLedgerAccount(int ledgerAccountId);
         List<TransactionSummary> GetTransactionSummaryForTransactionIds(IEnumerable<int> transactionIds);
         List<TransactionAccountDetail> GetTransactionAccountDetailForTransactionIds(IEnumerable<int> transactionIds);
+        int[] GetTransactionsIdsForLedgerAccount(int[] ledgerAccountIds);
         #endregion
     }
 }

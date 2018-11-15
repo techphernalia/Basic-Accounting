@@ -36,6 +36,21 @@ namespace Accounting.Model.Concrete
             }
         }
 
+        public IEnumerable<LedgerAccount> GetLedgerAccountsForHead(int ledgerHeadId, bool showDirectOnly)
+        {
+            if (showDirectOnly)
+            {
+                return context.LedgerAccounts.Where(account => account.ParentLedgerHeadId == ledgerHeadId);
+            }
+            List<int> ledgerHeadIds = new List<int> { ledgerHeadId };
+            for(var i=0;i<ledgerHeadIds.Count;i++)
+            {
+                var tempId = ledgerHeadIds[i];
+                ledgerHeadIds.AddRange(context.LedgerHeads.Where(x => x.ParentLedgerHeadId == tempId).Select(x => x.LedgerHeadId).ToList());
+            }
+            return context.LedgerAccounts.Where(account => ledgerHeadIds.Contains(account.ParentLedgerHeadId));
+        }
+
         public LedgerAccount DeleteLedgerAccount(int ledgerAccountId)
         {
             var dbEntry = context.LedgerAccounts.Find(ledgerAccountId);
@@ -72,7 +87,7 @@ namespace Accounting.Model.Concrete
             return dbEntry;
         }
 
-        public void SaveLedgerAccount(LedgerAccount ledgerAccount)
+        public int SaveLedgerAccount(LedgerAccount ledgerAccount)
         {
             if (ledgerAccount.LedgerAccountId == 0)
             {
@@ -90,6 +105,7 @@ namespace Accounting.Model.Concrete
                 }
             }
             context.SaveChanges();
+            return ledgerAccount.LedgerAccountId;
         }
 
         public void SaveLedgerHead(LedgerHead ledgerHead)

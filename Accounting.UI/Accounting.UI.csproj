@@ -270,8 +270,8 @@
     <Content Include="Views\LedgerAccount\Edit.cshtml" />
     <Content Include="Views\Transaction\Edit.cshtml" />
     <Content Include="Views\Shared\FooterLedger.cshtml" />
-    <Content Include="Views\Transaction\List.cshtml" />
     <Content Include="Views\Report\GenerateSQLScripts.cshtml" />
+    <Content Include="Views\Transaction\ListLedgerAccount.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

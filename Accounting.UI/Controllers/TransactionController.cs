@@ -12,15 +12,16 @@ namespace Accounting.UI.Controllers
     public class TransactionController : Controller
     {
         private ITransactionRepository transactionRepository;
-
-        public TransactionController(ITransactionRepository repo)
+        private ILedgerRepository ledgerRepository;
+        public TransactionController(ITransactionRepository repoTran,ILedgerRepository repoLedg)
         {
-            transactionRepository = repo;
+            transactionRepository = repoTran;
+            ledgerRepository = repoLedg;
         }
         public ViewResult Create()
         {
             SetMetaDataForForm();
-            return View("Edit", new CreateTransactionViewModel { TransactionAccounts = new List<TransactionAccountDetail> { new TransactionAccountDetail { } } });
+            return View("Edit", new CreateTransactionViewModel { TransactionAccounts = new List<TransactionAccountDetail> { new TransactionAccountDetail { TransactionSide = TransactionSide.Credit }, new TransactionAccountDetail { TransactionSide = TransactionSide.Debit } } });
         }
         public ViewResult Edit(int transactionSummaryId)
         {
@@ -44,52 +45,20 @@ namespace Accounting.UI.Controllers
             SetMetaDataForForm();
             return View(transactionDetail);
         }
-        public ViewResult List(int ledgerAccountId)
+        public ViewResult ListLedgerAccount(int ledgerAccountId)
         {
-            var transactionIds = transactionRepository.GetTransactionsIdsForLedgerAccount(ledgerAccountId);
-            var transactionSummary = transactionRepository.GetTransactionSummaryForTransactionIds(transactionIds);
-            var transactionAccountDetail = transactionRepository.GetTransactionAccountDetailForTransactionIds(transactionIds);
-            var displayTransactionDetail = (from summary in transactionSummary.OrderBy(x => x.TransactionDate)
-                                            select new DisplayTransactionViewModel
-                                            {
-                                                TransactionSummaryId = summary.TransactionSummaryId,
-                                                TransactionDate = summary.TransactionDate,
-                                                TransactionNarration = summary.TransactionNarration,
-                                                TransactionAccounts = (from acc in transactionAccountDetail where acc.TransactionSummaryId == summary.TransactionSummaryId select acc).ToList(),
-                                            }).ToList();
-            double openingBal = ledgerAccountId.LedgerAccount().OpeningBalance;
-            double closingBal = openingBal;
-            foreach (var tran in displayTransactionDetail)
-            {
-                var ledgerDetail = (from l in tran.TransactionAccounts where l.LedgerAccountId == ledgerAccountId select l).ToList();
-                double creditAmount = 0;
-                double debitAmount = 0;
-                foreach (var l in ledgerDetail)
-                {
-                    tran.TransactionAccounts.Remove(l);
-                    if (l.TransactionSide == TransactionSide.Credit)
-                    {
-                        creditAmount += l.Amount;
-                    }
-                    else
-                    {
-                        debitAmount += l.Amount;
-                    }
-                }
-                closingBal += creditAmount - debitAmount;
-
-                tran.CreditAmount = creditAmount;
-                tran.DebitAmount = debitAmount;
-                tran.Balance = closingBal;
-            }
-            ViewBag.LedgerAccountId = ledgerAccountId;
-            ViewBag.OpeningBalance = openingBal;
-            ViewBag.ClosingBalance = closingBal;
-            return View(displayTransactionDetail);
+            var ledgerAccount = ledgerAccountId.LedgerAccount();
+            return View(PopulateTransactionDetailsForAccounts("Account", ledgerAccount.LedgerAccountName, new int[] { ledgerAccountId }, ledgerAccount.OpeningBalance, true));
+        }
+        public ViewResult ListLedgerHead(int ledgerHeadId)
+        {
+            var ledgerHead = ledgerHeadId.LedgerHead();
+            var accountIds = ledgerRepository.GetLedgerAccountsForHead(ledgerHeadId, false).Select(x => x.LedgerAccountId).ToArray();
+            return View("ListLedgerAccount", PopulateTransactionDetailsForAccounts("Head", ledgerHead.LedgerHeadName, accountIds, 0, false));
         }
         private void SetMetaDataForForm()
         {
-            ViewBag.LedgerAccounts = CacheRepository.LedgerAccounts.OrderBy(x=>x.LedgerAccountName).ToList();
+            ViewBag.LedgerAccounts = CacheRepository.LedgerAccounts.OrderBy(x => x.LedgerAccountName).ToList();
         }
         private bool ValidateTransaction(CreateTransactionViewModel transactionDetail)
         {
@@ -107,6 +76,51 @@ namespace Accounting.UI.Controllers
         private double GetBalance(CreateTransactionViewModel transactionDetail)
         {
             return transactionDetail.TransactionAccounts.Sum(x => x.Amount * (x.TransactionSide == TransactionSide.Credit ? 1 : -1));
+        }
+        private List<DisplayTransactionViewModel> PopulateTransactionDetailsForAccounts(string listType, string listTypeValue, int[] accountIds, double openingBalance, bool removeCurrent)
+        {
+            ViewBag.ListType = listType;
+            ViewBag.ListTypeValue = listTypeValue;
+            var transactionIds = transactionRepository.GetTransactionsIdsForLedgerAccount(accountIds);
+            var transactionSummary = transactionRepository.GetTransactionSummaryForTransactionIds(transactionIds);
+            var transactionAccountDetail = transactionRepository.GetTransactionAccountDetailForTransactionIds(transactionIds);
+            var displayTransactionDetail = (from summary in transactionSummary.OrderBy(x => x.TransactionDate)
+                                            select new DisplayTransactionViewModel
+                                            {
+                                                TransactionSummaryId = summary.TransactionSummaryId,
+                                                TransactionDate = summary.TransactionDate,
+                                                TransactionNarration = summary.TransactionNarration,
+                                                TransactionAccounts = (from acc in transactionAccountDetail where acc.TransactionSummaryId == summary.TransactionSummaryId select acc).ToList(),
+                                            }).ToList();
+            double closingBal = openingBalance;
+            foreach (var tran in displayTransactionDetail)
+            {
+                var ledgerDetail = (from l in tran.TransactionAccounts where accountIds.Contains(l.LedgerAccountId) select l).ToList();
+                double creditAmount = 0;
+                double debitAmount = 0;
+                foreach (var l in ledgerDetail)
+                {
+                    if (removeCurrent)
+                    {
+                        tran.TransactionAccounts.Remove(l);
+                    }
+                    if (l.TransactionSide == TransactionSide.Credit)
+                    {
+                        creditAmount += l.Amount;
+                    }
+                    else
+                    {
+                        debitAmount += l.Amount;
+                    }
+                }
+                closingBal += creditAmount - debitAmount;
+                tran.CreditAmount = creditAmount;
+                tran.DebitAmount = debitAmount;
+                tran.Balance = closingBal;
+            }
+            ViewBag.OpeningBalance = openingBalance;
+            ViewBag.ClosingBalance = closingBal;
+            return displayTransactionDetail;
         }
     }
 }
