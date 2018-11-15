@@ -74,5 +74,10 @@ namespace Accounting.Model.Concrete
             context.SaveChanges();
             return transactionSummary.TransactionSummaryId;
         }
+
+        public int[] GetTransactionsIdsForLedgerAccount(int[] ledgerAccountIds)
+        {
+            return context.TransactionAccountDetails.Where(x => ledgerAccountIds.Contains(x.LedgerAccountId)).Select(x => x.TransactionSummaryId).ToArray();
+        }
     }
 }

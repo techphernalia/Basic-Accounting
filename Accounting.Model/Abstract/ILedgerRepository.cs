@@ -23,7 +23,8 @@ namespace Accounting.Model.Abstract
 
         #region Ledger Account
         IEnumerable<LedgerAccount> LedgerAccounts { get; }
-        void SaveLedgerAccount(LedgerAccount ledgerAccount);
+        IEnumerable<LedgerAccount> GetLedgerAccountsForHead(int ledgerHeadId,bool showDirectOnly);
+        int SaveLedgerAccount(LedgerAccount ledgerAccount);
         LedgerAccount DeleteLedgerAccount(int ledgerAccountId);
         #endregion
     }
